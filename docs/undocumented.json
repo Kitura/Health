@@ -1,0 +1,159 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Health.swift",
+      "line": 21,
+      "symbol": "Health.status",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Health.swift",
+      "line": 32,
+      "symbol": "Health.numberOfChecks",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Health.swift",
+      "line": 38,
+      "symbol": "Health.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Health.swift",
+      "line": 43,
+      "symbol": "Health.addCheck(check:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Health.swift",
+      "line": 47,
+      "symbol": "Health.addCheck(check:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 18,
+      "symbol": "State.UP",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 19,
+      "symbol": "State.DOWN",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 22,
+      "symbol": "Status",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 23,
+      "symbol": "Status.state",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 24,
+      "symbol": "Status.details",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 26,
+      "symbol": "Status.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 31,
+      "symbol": "Status.init(state:details:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 36,
+      "symbol": "Status.toDictionary()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 42,
+      "symbol": "Status.toSimpleDictionary()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 51,
+      "symbol": "HealthCheck",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 52,
+      "symbol": "HealthCheck.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 53,
+      "symbol": "HealthCheck.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 54,
+      "symbol": "HealthCheck.evaluate()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 57,
+      "symbol": "HealthProtocol",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 58,
+      "symbol": "HealthProtocol.status",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 59,
+      "symbol": "HealthProtocol.addCheck(check:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/king/workspaces/Health/Sources/Protocols.swift",
+      "line": 60,
+      "symbol": "HealthProtocol.addCheck(check:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/king/workspaces/Health"
+}

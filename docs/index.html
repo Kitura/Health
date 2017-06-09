@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html"> Docs</a> (8% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html"> Reference</a>
+        <img id="carat" src="img/carat.png" />
+          Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/Health.html">Health</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/State.html">State</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/HealthCheck.html">HealthCheck</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/HealthProtocol.html">HealthProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/Status.html">Status</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <p><a href="https://travis-ci.com/IBM-Swift/Health"><img src="https://travis-ci.com/IBM-Swift/Health.svg?token=vW8PK5GRFLpKp5azyZhD&branch=master" alt="Build Status - Master"></a>
+<img src="https://img.shields.io/badge/os-macOS-green.svg?style=flat" alt="macOS">
+<img src="https://img.shields.io/badge/os-linux-green.svg?style=flat" alt="Linux"></p>
+<h1 id='health' class='heading'>Health</h1>
+
+<p>The Health package provides a basic infrastructure that Swift applications can use for reporting their overall health status.</p>
+
+<p>As an application developer, you would create an instance of the <code>Health</code> class and then register one or more health checks. A health check can be either a closure that conforms to the <code>HealthCheckClosure</code> typealias or a class that conforms to the <code>HealthCheck</code> protocol. Once you have your health checks in place, you can ask your <code>Health</code> instance for its status.</p>
+<h2 id='swift-version' class='heading'>Swift version</h2>
+
+<p>The latest version of Health works with the <code>3.1.1</code> version of the Swift binaries. You can download this version of the Swift binaries by following this <a href="https://swift.org/download/#snapshots">link</a>.</p>
+<h2 id='usage' class='heading'>Usage:</h2>
+
+<p>To leverage the Health package in your Swift application, you should specify a dependency for it in your <code>Package.swift</code> file:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">PackageDescription</span>
+
+ <span class="k">let</span> <span class="nv">package</span> <span class="o">=</span> <span class="kt">Package</span><span class="p">(</span>
+     <span class="nv">name</span><span class="p">:</span> <span class="s">"MyAwesomeSwiftProject"</span><span class="p">,</span>
+
+     <span class="o">...</span>
+
+     <span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
+         <span class="o">.</span><span class="kt">Package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/IBM-Swift/Health.git"</span><span class="p">,</span> <span class="nv">majorVersion</span><span class="p">:</span> <span class="mi">0</span><span class="p">),</span>
+
+         <span class="o">...</span>
+
+     <span class="p">])</span>
+</code></pre>
+
+<p>And this is how you create a <code>Health</code> instance and register your health checks:</p>
+<pre class="highlight swift"><code>
+<span class="o">...</span>
+
+<span class="k">let</span> <span class="nv">health</span> <span class="o">=</span> <span class="kt">Health</span><span class="p">()</span>
+
+<span class="c1">// Add custom checks</span>
+<span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt">MyCheck1</span><span class="p">())</span>
+<span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt">MyCheck2</span><span class="p">())</span>
+<span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="n">myClosureCheck1</span><span class="p">)</span>
+<span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="n">myClosureCheck1</span><span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="c1">// Get current health status</span>
+<span class="k">let</span> <span class="nv">count</span> <span class="o">=</span> <span class="n">health</span><span class="o">.</span><span class="n">numberOfChecks</span>
+<span class="k">let</span> <span class="nv">status</span><span class="p">:</span> <span class="kt">Status</span> <span class="o">=</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span>
+<span class="k">let</span> <span class="nv">state</span><span class="p">:</span> <span class="kt">State</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">state</span>
+<span class="k">let</span> <span class="nv">dictionary</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="nf">toDictionary</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">simpleDictionary</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="nf">toSimpleDictionary</span><span class="p">()</span>
+
+<span class="o">...</span>
+
+</code></pre>
+
+<p>The contents of the simple dictionary simply contains a key-value pair that lets you know whether the application is UP or DOWN:</p>
+<pre class="highlight plaintext"><code>["status": "UP"]
+</code></pre>
+
+<p>The contents of the dictionary contains a key-value pair that lets you know whether the application is UP or DOWN plus additional details about the health checks that failed (if available):</p>
+<pre class="highlight plaintext"><code>["details": ["Cloudant health check.", "A health check closure reported status as DOWN."], "status": "DOWN"]
+</code></pre>
+
+<p>Swift applications can then use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the <code>Health</code> object to get the overall status and then send it back to a client as a JSON payload.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2017-06-09)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
