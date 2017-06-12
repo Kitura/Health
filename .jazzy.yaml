@@ -1,0 +1,14 @@
+module: Health
+author: IBM
+github_url: https://github.com/IBM-Swift/Health/
+
+theme: fullwidth
+clean: true
+exclude: [Packages]
+
+readme: README.md
+
+skip_undocumented: false
+hide_documentation_coverage: false
+
+xcodebuild_arguments: [-project, Health.xcodeproj, -target, Health, LIBRARY_SEARCH_PATHS=.build/debug]
