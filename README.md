@@ -10,7 +10,7 @@ As an application developer, you create an instance of the `Health` class and th
 ## Swift version
 The latest version of Health works with the `3.1.1` version of the Swift binaries. You can download this version of the Swift binaries by following this [link](https://swift.org/download/#snapshots).
 
-## Usage:
+## Usage
 To leverage the Health package in your Swift application, you should specify a dependency for it in your `Package.swift` file:
 
 ```swift
@@ -64,10 +64,10 @@ The contents of the simple dictionary simply contains a key-value pair that lets
 ["status": "UP"]
 ```
 
-The contents of the dictionary contains a key-value pair that lets you know whether the application is UP or DOWN plus additional details about the health checks that failed (if available):
+The contents of the dictionary contains a key-value pair that lets you know whether the application is UP or DOWN, additional details about the health checks that failed (if any), and a timestamp value (in UTC time):
 
 ```
-["details": ["Cloudant health check.", "A health check closure reported status as DOWN."], "status": "DOWN"]
+["status": "DOWN", "timestamp": "2017-06-12T18:04:38+0000", "details": ["Cloudant health check.", "A health check closure reported status as DOWN."]]
 ```
 
 Swift applications can then use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the `Health` object to get the overall status and then send it back to a client as a JSON payload.
@@ -81,10 +81,12 @@ let health = Health(statusExpirationTime: 30000)
 
 The `statusExpirationTime` parameter specifies the number of milliseconds that a given instance of `Health` should cache its status before recomputing it. For instance, if the value assigned to `statusExpirationTime` is `30000` (as shown above), then 30 seconds must elapse before the `Health` instance computes its status again by querying each health check that has been registered. Please note that the default value for the `statusExpirationTime` parameter is `30000`.
 
-## Health and a Kitura-based application
+## Using Health in a Kitura application
 One common use case for this Swift package is to integrate it into a Kitura-based application, as shown next:
 
 ```swift
+import Kitura
+import Foundation
 
 ...
 
@@ -94,8 +96,8 @@ router = Router()
 health = Health()
 
 // Register health checks...
-health.addCheck(check: Microserv1Check())
-health.addCheck(check: microserv2check)
+health.addCheck(check: Microservice1Check())
+health.addCheck(check: microservice2Check)
 
 ...
 
