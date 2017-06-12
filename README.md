@@ -64,7 +64,7 @@ The contents of the simple dictionary simply contains a key-value pair that lets
 ["status": "UP"]
 ```
 
-The contents of the dictionary contains a key-value pair that lets you know whether the application is UP or DOWN, additional details about the health checks that failed (if any), and a timestamp value (in UTC time):
+The contents of the dictionary contains a key-value pair that lets you know whether the application is UP or DOWN, additional details about the health checks that failed (if any), and a Universal Time Coordinated (UTC) timestamp value:
 
 ```
 ["status": "DOWN", "timestamp": "2017-06-12T18:04:38+0000", "details": ["Cloudant health check.", "A health check closure reported status as DOWN."]]
