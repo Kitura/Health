@@ -83,10 +83,11 @@ class HealthTests: XCTestCase {
     let dictionary = health.status.toDictionary()
     print("dictionary: \(dictionary)")
     // There should only be two keys
-    XCTAssertEqual(dictionary.count, 2)
+    XCTAssertEqual(dictionary.count, 3)
     let keys = dictionary.keys
     XCTAssertTrue(keys.contains("status"))
     XCTAssertTrue(keys.contains("details"))
+    XCTAssertTrue(keys.contains("timestamp"))
 
     if let status = dictionary["status"] as? String {
       XCTAssertEqual(status, "UP")

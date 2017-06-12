@@ -15,8 +15,11 @@
 **/
 
 public class Health: HealthProtocol {
+  private let statusExpirationWindow: Int // seconds
   private var checks: [HealthCheck]
   private var closureChecks: [HealthCheckClosure]
+  private var lastStatus: Status
+  //private var 
 
   public var status: Status {
     get {
@@ -35,7 +38,9 @@ public class Health: HealthProtocol {
     }
   }
 
-  public init() {
+  public init(statusExpirationWindow: Int = 300) {
+    self.statusExpirationWindow = statusExpirationWindow
+    self.lastStatus = Status(state: .UP)
     checks = [HealthCheck]()
     closureChecks = [HealthCheckClosure]()
   }

@@ -14,6 +14,9 @@
 * limitations under the License.
 **/
 
+import Foundation
+import LoggerAPI
+
 public enum State: String {
 case UP
 case DOWN
@@ -22,20 +25,27 @@ case DOWN
 public struct Status {
   public let state: State
   public let details: [String]
+  public let tsInMillis: UInt64
+  private let dateFormatter: DateFormatter
 
-  public init() {
-    self.state = State.UP
-    self.details = []
-  }
-
-  public init(state: State, details: [String] = []) {
+  public init(state: State = State.UP, details: [String] = []) {
     self.state = state
     self.details = details
+    self.tsInMillis = Date.currentTimeMillis()
+    self.dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    if let timeZone = TimeZone(identifier: "UTC") {
+      dateFormatter.timeZone = timeZone
+    } else {
+      Log.warning("UTC time zone not found...")
+    }
   }
 
   public func toDictionary() -> [String : Any] {
+    // Transform time in milliseconds to readable format
+    let timestamp = dateFormatter.string(from: Date(timeInMillis: self.tsInMillis))
     // Add state & details to dictionary
-    let dict = ["status" : self.state.rawValue, "details" : details]  as [String : Any]
+    let dict = ["status" : self.state.rawValue, "details" : details, "timestamp" : timestamp]  as [String : Any]
     return dict
   }
 

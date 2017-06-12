@@ -14,11 +14,15 @@
 * limitations under the License.
 **/
 
-import PackageDescription
+import Foundation
 
-let package = Package(
-  name: "Health",
-  dependencies: [
-    .Package(url: "https://github.com/IBM-Swift/LoggerAPI.git", majorVersion: 1),
-  ]
-)
+extension Date {
+  public static func currentTimeMillis() -> UInt64 {
+    let timeInMillis = UInt64(NSDate().timeIntervalSince1970 * 1000.0)
+    return timeInMillis
+  }
+
+  init(timeInMillis: UInt64) {
+    self = Date(timeIntervalSince1970: TimeInterval(timeInMillis / 1000))
+  }
+}
