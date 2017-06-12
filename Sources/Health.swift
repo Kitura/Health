@@ -14,21 +14,25 @@
 * limitations under the License.
 **/
 
+import Foundation
+import Dispatch
+
 public class Health: HealthProtocol {
-  private let statusExpirationWindow: Int // seconds
   private var checks: [HealthCheck]
   private var closureChecks: [HealthCheckClosure]
   private var lastStatus: Status
-  //private var 
+  private let statusExpirationTime: Int // milliseconds
+  private let statusSemaphore = DispatchSemaphore(value: 1)
 
   public var status: Status {
     get {
-      let checksDetails = checks.map { $0.evaluate() == State.DOWN ? $0.description : nil }
-      let closureChecksDetails = closureChecks.map { $0() == State.DOWN ? "A health check closure reported status as DOWN." : nil }
-      let details = (checksDetails + closureChecksDetails).flatMap { $0 }
-      let state = (details.isEmpty) ? State.UP : State.DOWN
-      let status = Status(state: state, details: details)
-      return status
+      statusSemaphore.wait()
+      // If elapsed time is bigger than the status expiration window, re-compute status
+      if (Date.currentTimeMillis() - self.lastStatus.tsInMillis) > UInt64(statusExpirationTime) {
+        forceUpdateStatus()
+      }
+      statusSemaphore.signal()
+      return lastStatus
     }
   }
 
@@ -38,8 +42,8 @@ public class Health: HealthProtocol {
     }
   }
 
-  public init(statusExpirationWindow: Int = 300) {
-    self.statusExpirationWindow = statusExpirationWindow
+  public init(statusExpirationTime: Int = 30000) {
+    self.statusExpirationTime = statusExpirationTime
     self.lastStatus = Status(state: .UP)
     checks = [HealthCheck]()
     closureChecks = [HealthCheckClosure]()
@@ -51,5 +55,13 @@ public class Health: HealthProtocol {
 
   public func addCheck(check: @escaping HealthCheckClosure) {
     closureChecks.append(check)
+  }
+
+  public func forceUpdateStatus() {
+    let checksDetails = checks.map { $0.evaluate() == State.DOWN ? $0.description : nil }
+    let closureChecksDetails = closureChecks.map { $0() == State.DOWN ? "A health check closure reported status as DOWN." : nil }
+    let details = (checksDetails + closureChecksDetails).flatMap { $0 }
+    let state = (details.isEmpty) ? State.UP : State.DOWN
+    lastStatus = Status(state: state, details: details)
   }
 }

@@ -89,22 +89,35 @@ class HealthTests: XCTestCase {
     XCTAssertTrue(keys.contains("details"))
     XCTAssertTrue(keys.contains("timestamp"))
 
+    // Validate status
     if let status = dictionary["status"] as? String {
       XCTAssertEqual(status, "UP")
     } else {
-      XCTFail("Non-expected status in dictionary.")
+      XCTFail("'status' field missing in dictionary.")
     }
 
+    // Validate details
     if let details = dictionary["details"] as? [String] {
       XCTAssertEqual(details.count, 0)
     } else {
-      XCTFail("Non-expected details in dictionary.")
+      XCTFail("'details' field missing in dictionary.")
+    }
+
+    // Validate timestamp
+    if let timestamp = dictionary["timestamp"] as? String {
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+      let date = dateFormatter.date(from: timestamp)
+      XCTAssertNotNil(date, "'timestamp' field in dictionary does not match expected format.")
+    } else {
+      XCTFail("'timestamp' field missing in dictionary.")
     }
   }
 
   func testAddChecks() {
     // Create Health instance
-    let health = Health()
+    let statusExpirationTime = 4000
+    let health = Health(statusExpirationTime: statusExpirationTime)
 
     // Add checks
     health.addCheck(check: MyPositiveCheck())
@@ -114,6 +127,11 @@ class HealthTests: XCTestCase {
 
     // Perform assertions
     XCTAssertEqual(health.numberOfChecks, 4)
+    // State should still be up (caching - 30 seconds)
+    XCTAssertEqual(health.status.state, State.UP)
+    // Wait for cache to expire
+    sleep(UInt32((statusExpirationTime + 500)/1000))
+    // State should be down now...
     XCTAssertEqual(health.status.state, State.DOWN)
 
     // Assert contents of dictionary

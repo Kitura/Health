@@ -23,6 +23,7 @@ case DOWN
 }
 
 public struct Status {
+  public let dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
   public let state: State
   public let details: [String]
   public let tsInMillis: UInt64
@@ -33,7 +34,7 @@ public struct Status {
     self.details = details
     self.tsInMillis = Date.currentTimeMillis()
     self.dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    dateFormatter.dateFormat = dateFormat
     if let timeZone = TimeZone(identifier: "UTC") {
       dateFormatter.timeZone = timeZone
     } else {
