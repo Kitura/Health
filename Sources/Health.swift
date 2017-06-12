@@ -17,6 +17,7 @@
 import Foundation
 import Dispatch
 
+/// A concrete implementation of the HealthProtocol protocol.
 public class Health: HealthProtocol {
   private var checks: [HealthCheck]
   private var closureChecks: [HealthCheckClosure]
@@ -53,6 +54,8 @@ public class Health: HealthProtocol {
     checks.append(check)
   }
 
+  /// addCheck: Adds the specified closure as a health check.
+  /// - Parameter check: The health check closure
   public func addCheck(check: @escaping HealthCheckClosure) {
     closureChecks.append(check)
   }
