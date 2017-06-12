@@ -116,7 +116,7 @@ class HealthTests: XCTestCase {
 
   func testAddChecks() {
     // Create Health instance
-    let statusExpirationTime = 4000
+    let statusExpirationTime = 3000
     let health = Health(statusExpirationTime: statusExpirationTime)
 
     // Add checks
