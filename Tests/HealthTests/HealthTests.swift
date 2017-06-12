@@ -130,7 +130,7 @@ class HealthTests: XCTestCase {
     // State should still be up (caching - 30 seconds)
     XCTAssertEqual(health.status.state, State.UP)
     // Wait for cache to expire
-    sleep(UInt32((statusExpirationTime + 500)/1000))
+    sleep(UInt32((statusExpirationTime + 1000)/1000))
     // State should be down now...
     XCTAssertEqual(health.status.state, State.DOWN)
 
