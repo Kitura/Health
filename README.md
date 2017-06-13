@@ -81,6 +81,42 @@ let health = Health(statusExpirationTime: 30000)
 
 The `statusExpirationTime` parameter specifies the number of milliseconds that a given instance of `Health` should cache its status before recomputing it. For instance, if the value assigned to `statusExpirationTime` is `30000` (as shown above), then 30 seconds must elapse before the `Health` instance computes its status again by querying each health check that has been registered. Please note that the default value for the `statusExpirationTime` parameter is `30000`.
 
+## Implementing a health check
+You can implement health checks by either extending the `HealthCheck` protocol or creating a closure that returns a `State` value.
+
+The following snippet of code shows the implementation of a class named `MyCustomCheck`, which implements the `HealthCheck` protocol:
+
+```swift
+class MyCustomCheck: HealthCheck {
+  public var name: String { get { return "MyCustomCheck for XYZ"} }
+
+  public var description: String { get { return "Description for MyCustomCheck..."} }
+
+  public func evaluate() -> State {
+    let state: State = isConnected() ? State.UP : State.DOWN
+    return state
+  }
+
+  private func isConnected() -> Bool {
+    ...
+  }
+}
+```
+
+The following snippet of code shows the implementation for a similar health check but using a closure instead:
+
+```swift
+
+func myCustomCheck() -> State {
+  let state: State = isConnected() ? State.UP : State.DOWN
+  return state
+}
+
+func isConnected() -> Bool {
+  ...
+}
+```
+
 ## Using Health in a Kitura application
 One common use case for this Swift package is to integrate it into a Kitura-based application, as shown next:
 
