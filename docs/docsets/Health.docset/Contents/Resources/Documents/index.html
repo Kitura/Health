@@ -179,6 +179,38 @@
 </code></pre>
 
 <p>The <code>statusExpirationTime</code> parameter specifies the number of milliseconds that a given instance of <code>Health</code> should cache its status before recomputing it. For instance, if the value assigned to <code>statusExpirationTime</code> is <code>30000</code> (as shown above), then 30 seconds must elapse before the <code>Health</code> instance computes its status again by querying each health check that has been registered. Please note that the default value for the <code>statusExpirationTime</code> parameter is <code>30000</code>.</p>
+<h2 id='implementing-a-health-check' class='heading'>Implementing a health check</h2>
+
+<p>You can implement health checks by either extending the <code>HealthCheck</code> protocol or creating a closure that returns a <code>State</code> value.</p>
+
+<p>The following snippet of code shows the implementation of a class named <code>MyCustomCheck</code>, which implements the <code>HealthCheck</code> protocol:</p>
+<pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">MyCustomCheck</span><span class="p">:</span> <span class="kt">HealthCheck</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"MyCustomCheck for XYZ"</span><span class="p">}</span> <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"Description for MyCustomCheck..."</span><span class="p">}</span> <span class="p">}</span>
+
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">evaluate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">State</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">state</span><span class="p">:</span> <span class="kt">State</span> <span class="o">=</span> <span class="nf">isConnected</span><span class="p">()</span> <span class="p">?</span> <span class="kt">State</span><span class="o">.</span><span class="kt">UP</span> <span class="p">:</span> <span class="kt">State</span><span class="o">.</span><span class="kt">DOWN</span>
+    <span class="k">return</span> <span class="n">state</span>
+  <span class="p">}</span>
+
+  <span class="kd">private</span> <span class="kd">func</span> <span class="nf">isConnected</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="o">...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>The following snippet of code shows the implementation for a similar health check but using a closure instead:</p>
+<pre class="highlight swift"><code>
+<span class="kd">func</span> <span class="nf">myCustomCheck</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">State</span> <span class="p">{</span>
+  <span class="k">let</span> <span class="nv">state</span><span class="p">:</span> <span class="kt">State</span> <span class="o">=</span> <span class="nf">isConnected</span><span class="p">()</span> <span class="p">?</span> <span class="kt">State</span><span class="o">.</span><span class="kt">UP</span> <span class="p">:</span> <span class="kt">State</span><span class="o">.</span><span class="kt">DOWN</span>
+  <span class="k">return</span> <span class="n">state</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">isConnected</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+  <span class="o">...</span>
+<span class="p">}</span>
+</code></pre>
 <h2 id='using-health-in-a-kitura-application' class='heading'>Using Health in a Kitura application</h2>
 
 <p>One common use case for this Swift package is to integrate it into a Kitura-based application, as shown next:</p>
@@ -206,6 +238,8 @@
 <span class="p">}</span>
 
 </code></pre>
+
+<p>In the code sample above, the health of the application is exposed through a <code>/health</code> endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then used the status information returned from the <code>/health</code> endpoint to monitor and manage the Swift application instance.</p>
 
           </div>
         </section>
