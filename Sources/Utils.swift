@@ -17,11 +17,16 @@
 import Foundation
 
 extension Date {
+
+  /// Returns the current time in milliseconds.
   public static func currentTimeMillis() -> UInt64 {
     let timeInMillis = UInt64(NSDate().timeIntervalSince1970 * 1000.0)
     return timeInMillis
   }
 
+  /// Constructor
+  ///
+  /// Creates a Date instance from milliseconds.
   init(timeInMillis: UInt64) {
     self = Date(timeIntervalSince1970: TimeInterval(timeInMillis / 1000))
   }

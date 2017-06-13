@@ -17,7 +17,10 @@
 import Foundation
 import Dispatch
 
-/// A concrete implementation of the HealthProtocol protocol.
+/// Health class
+///
+/// A concrete implementation of the HealthProtocol protocol that applications
+/// can instantiate and leverage right away.
 public class Health: HealthProtocol {
   private var checks: [HealthCheck]
   private var closureChecks: [HealthCheckClosure]
@@ -25,6 +28,7 @@ public class Health: HealthProtocol {
   private let statusExpirationTime: Int // milliseconds
   private let statusSemaphore = DispatchSemaphore(value: 1)
 
+  /// Status instance variable.
   public var status: Status {
     get {
       statusSemaphore.wait()
@@ -37,12 +41,17 @@ public class Health: HealthProtocol {
     }
   }
 
+  /// Number of health checks registered.
   public var numberOfChecks: Int {
     get {
       return (checks.count + closureChecks.count)
     }
   }
 
+  /// Constructor
+  ///
+  /// - Parameter statusExpirationTime: Optional. Time window in milliseconds that should
+  /// elapse before the status cache is considered to be expired.
   public init(statusExpirationTime: Int = 30000) {
     self.statusExpirationTime = statusExpirationTime
     self.lastStatus = Status(state: .UP)
@@ -50,16 +59,21 @@ public class Health: HealthProtocol {
     closureChecks = [HealthCheckClosure]()
   }
 
+  /// Registers a healh check.
+  ///
+  /// - Parameter check: An object that extends the HealthCheck class.
   public func addCheck(check: HealthCheck) {
     checks.append(check)
   }
 
-  /// addCheck: Adds the specified closure as a health check.
-  /// - Parameter check: The health check closure
+  /// Registers a healh check.
+  ///
+  /// - Parameter check: A closure that conforms to the HealthCheckClosure type alias.
   public func addCheck(check: @escaping HealthCheckClosure) {
     closureChecks.append(check)
   }
 
+  /// Forces an update to the status of this instance.
   public func forceUpdateStatus() {
     let checksDetails = checks.map { $0.evaluate() == State.DOWN ? $0.description : nil }
     let closureChecksDetails = closureChecks.map { $0() == State.DOWN ? "A health check closure reported status as DOWN." : nil }
