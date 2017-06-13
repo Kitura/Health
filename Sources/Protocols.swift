@@ -21,17 +21,22 @@ import LoggerAPI
 ///
 /// Enumeration that encapsulates the two possible states for an application, UP or DOWN.
 public enum State: String {
+
+/// Application is running just fine.
 case UP
+/// Application health is not good.
 case DOWN
 }
 
-/// Status struct
-///
 /// Struct that encapsulates the status of an application.
 public struct Status {
+  /// The date format used by the timestamp value in the dictionary.
   public let dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+  /// The state value contained within this struct.
   public let state: State
+  /// List of details describing any failures.
   public let details: [String]
+  /// The timestamp value in milliseconds for the status.
   public let tsInMillis: UInt64
   private let dateFormatter: DateFormatter
 
@@ -72,8 +77,6 @@ public struct Status {
   }
 }
 
-/// HealthCheckClosure typealias (closure)
-///
 /// HealthCheckClosure is a typealias for a closure that receives no arguments and
 /// returns a State value.
 public typealias HealthCheckClosure = () -> State
@@ -82,8 +85,11 @@ public typealias HealthCheckClosure = () -> State
 ///
 /// Healch check classes should extend this protocol to provide concrete implementations.
 public protocol HealthCheck {
+  /// Name for the health check.
   var name: String { get }
+  /// Description for the health check.
   var description: String { get }
+  /// Performs the health check test.
   func evaluate() -> State
 }
 
@@ -92,7 +98,14 @@ public protocol HealthCheck {
 /// Specifies the blueprint that must be implemented to satisfy the needs of a Healch class.
 /// A concrete implemetation of this protocol is already provided by this library (Health).
 public protocol HealthProtocol {
+  /// Status instance variable.
   var status: Status { get }
+  /// Registers a healh check.
+  ///
+  /// - Parameter check: An object that extends the HealthCheck class.
   func addCheck(check: HealthCheck)
+  /// Registers a healh check.
+  ///
+  /// - Parameter check: A closure that conforms to the HealthCheckClosure type alias.
   func addCheck(check: @escaping HealthCheckClosure)
 }
