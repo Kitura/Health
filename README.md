@@ -1,4 +1,4 @@
-[![Build Status - Master](https://travis-ci.org/IBM-Swift/Health.svg?branch=master)](https://travis-ci.org/IBM-Swift/Health)
+[![Build Status - Develop](https://travis-ci.org/IBM-Swift/Health.svg?branch=develop)](https://travis-ci.org/IBM-Swift/Health)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![Linux](https://img.shields.io/badge/os-linux-green.svg?style=flat)
 
