@@ -146,4 +146,4 @@ router.get("/health") { request, response, next in
 
 ```
 
-In the code sample above, the health of the application is exposed through a `/health` endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then used the status information returned from the `/health` endpoint to monitor and manage the Swift application instance.
+In the code sample above, the health of the application is exposed through the `/health` endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then used the status information returned from the `/health` endpoint to monitor and manage the Swift application instance.
