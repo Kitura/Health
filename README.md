@@ -1,6 +1,7 @@
 [![Build Status - Develop](https://travis-ci.org/IBM-Swift/Health.svg?branch=develop)](https://travis-ci.org/IBM-Swift/Health)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![Linux](https://img.shields.io/badge/os-linux-green.svg?style=flat)
+[![codecov](https://codecov.io/gh/IBM-Swift/Health/branch/master/graph/badge.svg)](https://codecov.io/gh/IBM-Swift/Health)
 
 # Health
 The Health package provides a basic infrastructure that Swift applications can use for reporting their overall health status.
