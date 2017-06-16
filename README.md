@@ -34,26 +34,28 @@ And this is how you create a `Health` instance and register your health checks:
 
 ```swift
 
-...
-
-let health = Health()
+import Health
 
 ...
 
-// Add custom checks
-health.addCheck(check: MyCheck1())
-health.addCheck(check: MyCheck2())
-health.addCheck(check: myClosureCheck1)
-health.addCheck(check: myClosureCheck1)
+  let health = Health()
 
 ...
 
-// Get current health status
-let count = health.numberOfChecks
-let status: Status = health.status
-let state: State = status.state
-let dictionary = status.toDictionary()
-let simpleDictionary = status.toSimpleDictionary()
+  // Add custom checks
+  health.addCheck(check: MyCheck1())
+  health.addCheck(check: MyCheck2())
+  health.addCheck(check: myClosureCheck1)
+  health.addCheck(check: myClosureCheck1)
+
+...
+
+  // Get current health status
+  let count = health.numberOfChecks
+  let status: Status = health.status
+  let state: State = status.state
+  let dictionary = status.toDictionary()
+  let simpleDictionary = status.toSimpleDictionary()
 
 ...
 
