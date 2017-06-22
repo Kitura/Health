@@ -142,11 +142,21 @@ health.addCheck(check: microservice2Check)
 
 // Define /health endpoint that leverages Health
 router.get("/health") { request, response, next in
-  let status = health.status.toDictionary()
-  // let status = health.status.toSimpleDictionary()
-  try response.send(json: status).end()
+  // let status = health.status.toDictionary()
+  let status = health.status.toSimpleDictionary()
+  if health.status.state == .UP {
+    try response.send(json: status).end()
+  } else {
+    try response.status(.serviceUnavailable).send(json: status).end()
+  }
 }
 
 ```
 
-In the code sample above, the health of the application is exposed through the `/health` endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then used the status information returned from the `/health` endpoint to monitor and manage the Swift application instance.
+In the code sample above, the health of the application is exposed through the `/health` endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then use the status information returned from the `/health` endpoint to monitor and manage the Swift application instance. 
+
+In addition to sending the dictionary response, a server needs to respond with a non-200 status code, if the health state is considered down. This can be accomplished with a status code such as 503 `.serviceUnavailable`. That way, the cloud environment can recognize the negative health response, destroy that instance of the application, and restart the application.
+
+## Using Cloud Foundry Environment
+
+If using a Cloud Foundry environment, make sure to update your `manifest.yml` to support health check. In the example above, you would set the `health-check-type` value to `http` and the `health-check-http-endpoint` to the correct health endpoint path, which is `/health` in this case. Review the [health check documentation](https://docs.cloudfoundry.org/devguide/deploy-apps/healthchecks.html) for more details.
