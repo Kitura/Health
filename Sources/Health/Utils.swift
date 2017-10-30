@@ -16,6 +16,7 @@
 
 import Foundation
 
+/// Extension to the Date type.
 extension Date {
 
   /// Returns the current time in milliseconds.
@@ -24,10 +25,17 @@ extension Date {
     return timeInMillis
   }
 
+  /// Returns the time value of the date in milliseconds (since 1970).
+  var milliseconds: UInt64 { 
+    get {
+      return UInt64(self.timeIntervalSince1970 * 1000.0)
+    }
+  }
+
   /// Constructor
   ///
   /// Creates a Date instance from milliseconds.
-  init(timeInMillis: UInt64) {
+  public init(timeInMillis: UInt64) {
     self = Date(timeIntervalSince1970: TimeInterval(timeInMillis / 1000))
   }
 }

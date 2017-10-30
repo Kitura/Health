@@ -24,7 +24,8 @@ class HealthTests: XCTestCase {
   static var allTests: [(String, (HealthTests) -> () throws -> Void)] {
     return [
       ("testBasicConstruction", testBasicConstruction),
-      ("testAddChecks", testAddChecks)
+      ("testAddChecks", testAddChecks),
+      ("testStatusSerialization", testStatusSerialization)
     ]
   }
 
@@ -151,6 +152,21 @@ class HealthTests: XCTestCase {
     } else {
       XCTFail("Non-expected details in dictionary.")
     }
+  }
+
+  func testStatusSerialization() {
+    let status: Status = Status(state: .DOWN, details: ["details1", "details2", "details3"], tsInMillis: 1509402742417)
+    guard let data = try? JSONEncoder().encode(status) else {
+      XCTFail("Failed to encode Status instance!")
+      return
+    }
+
+    guard let decodedStatus = try? JSONDecoder().decode(Status.self, from: data) else {
+       XCTFail("Failed to decode JSON data into a Status instance!")
+       return
+    }
+
+    XCTAssertEqual(status, decodedStatus, "Failed to encode and decode Status instance!")
   }
 
 }

@@ -9,7 +9,7 @@ The Health package provides a basic infrastructure that Swift applications can u
 As an application developer, you create an instance of the `Health` class and then register one or more health checks. A health check can be either a closure that conforms to the `HealthCheckClosure` typealias or a class that conforms to the `HealthCheck` protocol. Once you have your health checks in place, you can ask your `Health` instance for its status.
 
 ## Swift version
-The latest version of Health works with the `3.1.1` version of the Swift binaries. You can download this version of the Swift binaries by following this [link](https://swift.org/download/#snapshots).
+The latest version of Health works with the `4.0` version of the Swift binaries. You can download this version of the Swift binaries by following this [link](https://swift.org/download/#snapshots).
 
 ## Usage
 To leverage the Health package in your Swift application, you should specify a dependency for it in your `Package.swift` file:
