@@ -22,7 +22,7 @@
         <a class="header-link" href="index.html">
           Health Docs
         </a>
-         (100% documented)
+         (97% documented)
       </p>
     
       <p class="header-col--secondary">
@@ -55,11 +55,17 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/Health.html">Health</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/StatusDateFormatter.html">StatusDateFormatter</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="Enums.html">Enums</a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/InvalidDataError.html">InvalidDataError</a>
+              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/State.html">State</a>
               </li>
@@ -96,7 +102,7 @@
             <a class="nav-group-name-link" href="Typealiases.html">Typealiases</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Typealiases.html#/s:6Health18HealthCheckClosure">HealthCheckClosure</a>
+                <a class="nav-group-task-link" href="Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a>
               </li>
             </ul>
           </li>
@@ -107,9 +113,10 @@
         <section class="section">
           <div class="section-content">
             
-            <p><a href="https://travis-ci.com/IBM-Swift/Health"><img src="https://travis-ci.com/IBM-Swift/Health.svg?token=vW8PK5GRFLpKp5azyZhD&branch=master" alt="Build Status - Master"></a>
+            <p><a href="https://travis-ci.org/IBM-Swift/Health"><img src="https://travis-ci.org/IBM-Swift/Health.svg?branch=develop" alt="Build Status - Develop"></a>
 <img src="https://img.shields.io/badge/os-macOS-green.svg?style=flat" alt="macOS">
-<img src="https://img.shields.io/badge/os-linux-green.svg?style=flat" alt="Linux"></p>
+<img src="https://img.shields.io/badge/os-linux-green.svg?style=flat" alt="Linux">
+<a href="https://codecov.io/gh/IBM-Swift/Health"><img src="https://codecov.io/gh/IBM-Swift/Health/branch/master/graph/badge.svg" alt="codecov"></a></p>
 <h1 id='health' class='heading'>Health</h1>
 
 <p>The Health package provides a basic infrastructure that Swift applications can use for reporting their overall health status.</p>
@@ -117,7 +124,7 @@
 <p>As an application developer, you create an instance of the <code>Health</code> class and then register one or more health checks. A health check can be either a closure that conforms to the <code>HealthCheckClosure</code> typealias or a class that conforms to the <code>HealthCheck</code> protocol. Once you have your health checks in place, you can ask your <code>Health</code> instance for its status.</p>
 <h2 id='swift-version' class='heading'>Swift version</h2>
 
-<p>The latest version of Health works with the <code>3.1.1</code> version of the Swift binaries. You can download this version of the Swift binaries by following this <a href="https://swift.org/download/#snapshots">link</a>.</p>
+<p>The latest version of Health works with the <code>4.0</code> version of the Swift binaries. You can download this version of the Swift binaries by following this <a href="https://swift.org/download/#snapshots">link</a>.</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
 <p>To leverage the Health package in your Swift application, you should specify a dependency for it in your <code>Package.swift</code> file:</p>
@@ -129,11 +136,8 @@
      <span class="o">...</span>
 
      <span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
-         <span class="o">.</span><span class="kt">Package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/IBM-Swift/Health.git"</span><span class="p">,</span> <span class="nv">majorVersion</span><span class="p">:</span> <span class="mi">0</span><span class="p">),</span>
-
-         <span class="o">...</span>
-
-     <span class="p">])</span>
+      <span class="o">.</span><span class="nf">package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/IBM-Swift/Health.git"</span><span class="p">,</span> <span class="o">.</span><span class="nf">upToNextMajor</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="s">"0.0.2"</span><span class="p">))</span>
+    <span class="p">],</span>
 </code></pre>
 
 <p>And this is how you create a <code>Health</code> instance and register your health checks:</p>
@@ -171,7 +175,11 @@
 <pre class="highlight plaintext"><code>["status": "DOWN", "timestamp": "2017-06-12T18:04:38+0000", "details": ["Cloudant health check.", "A health check closure reported status as DOWN."]]
 </code></pre>
 
-<p>Swift applications can then use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the <code>Health</code> object to get the overall status and then send it back to a client as a JSON payload.</p>
+<p>Swift applications can use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the <code>Health</code> object to get the overall status and then send it back to a client as a JSON payload. Also, note that the <code>Status</code> structure now conforms to the <code>Codable</code> protocol, which will allow serializing an instance of this structure and send it as a response to a client. If doing so, you then don&rsquo;t need to invoke the <code>toDictionary()</code> or the <code>toSimpleDictionary()</code> methods in order to obtain the status payload for a client:</p>
+<pre class="highlight plaintext"><code>let status: Status = health.status
+let payload = try JSONEncoder().encode(status)
+// send payload to client
+</code></pre>
 <h2 id='caching' class='heading'>Caching</h2>
 
 <p>When you create an instance of the <code>Health</code> class, you can pass an optional argument (named <code>statusExpirationTime</code>) to its initializer as shown next:</p>
@@ -232,14 +240,40 @@
 
 <span class="c1">// Define /health endpoint that leverages Health</span>
 <span class="n">router</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="s">"/health"</span><span class="p">)</span> <span class="p">{</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">next</span> <span class="k">in</span>
-  <span class="k">let</span> <span class="nv">status</span> <span class="o">=</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="nf">toDictionary</span><span class="p">()</span>
-  <span class="c1">// let status = health.status.toSimpleDictionary()</span>
-  <span class="k">try</span> <span class="n">response</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">json</span><span class="p">:</span> <span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="nf">end</span><span class="p">()</span>
+  <span class="c1">// let status = health.status.toDictionary()</span>
+  <span class="k">let</span> <span class="nv">status</span> <span class="o">=</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="nf">toSimpleDictionary</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="o">.</span><span class="kt">UP</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="n">response</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">json</span><span class="p">:</span> <span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="nf">end</span><span class="p">()</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="n">response</span><span class="o">.</span><span class="nf">status</span><span class="p">(</span><span class="o">.</span><span class="n">serviceUnavailable</span><span class="p">)</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="nv">json</span><span class="p">:</span> <span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="nf">end</span><span class="p">()</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 
 </code></pre>
 
-<p>In the code sample above, the health of the application is exposed through a <code>/health</code> endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then used the status information returned from the <code>/health</code> endpoint to monitor and manage the Swift application instance.</p>
+<p>In the code sample above, the health of the application is exposed through the <code>/health</code> endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then use the status information returned from the <code>/health</code> endpoint to monitor and manage the Swift application instance. </p>
+
+<p>As an alternative to the implementation shown above for the <code>/health</code> endpoint, you can take advantage of the <code>Codable</code> protocol available in Swift 4. Since the <code>Status</code> struct satisfities the <code>Codable</code> protocol, a simpler implementation for the <code>/health</code> endpoint can be implemented using the new codable capabilties in Kitura 2.0 as shown below:</p>
+<pre class="highlight swift"><code><span class="o">...</span>
+
+<span class="c1">// Define /health endpoint that leverages Health</span>
+<span class="n">router</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="s">"/health"</span><span class="p">)</span> <span class="p">{</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">next</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="nv">status</span> <span class="o">=</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span>
+  <span class="k">if</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="o">.</span><span class="kt">UP</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="n">response</span><span class="o">.</span><span class="nf">status</span><span class="p">(</span><span class="o">.</span><span class="kt">OK</span><span class="p">)</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="nf">end</span><span class="p">()</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="n">response</span><span class="o">.</span><span class="nf">status</span><span class="p">(</span><span class="o">.</span><span class="n">serviceUnavailable</span><span class="p">)</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="nf">end</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">...</span>
+
+</code></pre>
+
+<p>In addition to sending the dictionary response, a server needs to respond with a non-200 status code, if the health state is considered down. This can be accomplished with a status code such as 503 <code>.serviceUnavailable</code>. That way, the cloud environment can recognize the negative health response, destroy that instance of the application, and restart the application.</p>
+<h2 id='using-cloud-foundry-environment' class='heading'>Using Cloud Foundry Environment</h2>
+
+<p>If using a Cloud Foundry environment, make sure to update your <code>manifest.yml</code> to support health check. In the example above, you would set the <code>health-check-type</code> value to <code>http</code> and the <code>health-check-http-endpoint</code> to the correct health endpoint path, which is <code>/health</code> in this case. Review the <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/healthchecks.html">health check documentation</a> for more details.</p>
 
           </div>
         </section>
@@ -248,8 +282,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2017-06-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2017-10-31)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
