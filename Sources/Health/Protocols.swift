@@ -40,27 +40,58 @@ case UP
 case DOWN
 }
 
+public class StatusDateFormatter {
+  private let dateFormatter: DateFormatter
+  init() {
+    self.dateFormatter = DateFormatter()
+    self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    if let timeZone = TimeZone(identifier: "UTC") {
+      self.dateFormatter.timeZone = timeZone
+    } else {
+      // This should never occur...
+      Log.warning("UTC time zone not found.")
+    }
+  }
+
+  public func string(from date: Date) -> String {
+    return dateFormatter.string(from: date)
+  }
+
+  public func date(from string: String) -> Date? {
+    return dateFormatter.date(from: string)
+  }
+
+  var dateFormat: String {
+    get {
+      return self.dateFormatter.dateFormat
+    }
+  }
+}
+
 /// Struct that encapsulates the status of an application.
 public struct Status: Equatable {
+  public static let dateFormatter = StatusDateFormatter()
+
   /// The date format used by the timestamp value in the dictionary.
-  public static let dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+  public static var dateFormat: String {
+    get {
+      return dateFormatter.dateFormat
+    }
+  }
+
   /// The state value contained within this struct.
   public let state: State
   /// List of details describing any failures.
   public let details: [String]
   /// The timestamp value in milliseconds for the status.
-  public let tsInMillis: UInt64
-  
-  private static var dateFormatter: DateFormatter {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = Status.dateFormat
-    if let timeZone = TimeZone(identifier: "UTC") {
-      dateFormatter.timeZone = timeZone
-    } else {
-      Log.warning("UTC time zone not found...")
+  public var tsInMillis: UInt64 {
+    get {
+      let date = Status.dateFormatter.date(from: timestamp)
+      return date!.milliseconds
     }
-    return dateFormatter
   }
+  /// The string timestamp value for the status.
+  public let timestamp: String
 
   enum CodingKeys: String, CodingKey {
         case status
@@ -69,7 +100,7 @@ public struct Status: Equatable {
   }
 
   public static func ==(lhs: Status, rhs: Status) -> Bool {
-        return (lhs.state == rhs.state) && (lhs.details == rhs.details) && (lhs.tsInMillis == rhs.tsInMillis)
+        return (lhs.state == rhs.state) && (lhs.details == rhs.details) && (lhs.timestamp == rhs.timestamp)
    }
 
   /// Constructor
@@ -77,18 +108,23 @@ public struct Status: Equatable {
   /// - Parameter state: Optional. The state value for this Status instance (default value is 'UP').
   /// - Parameter details: Optional. A list of strings that describes any issues that may have
   /// occurred while executing a health check.
-  /// - Parameter tsInMillis: Optional. The timestamp value in milliseconds (default value is current time in milliseconds).
-  public init(state: State = State.UP, details: [String] = [], tsInMillis: UInt64 = Date.currentTimeMillis()) {
+  /// - Parameter timestamp: Optional. The string timestamp value for the status (default value is current time).
+  public init(state: State = State.UP, details: [String] = [], timestamp: String = dateFormatter.string(from: Date())) {
     self.state = state
     self.details = details
-    self.tsInMillis = tsInMillis
-  }
+    if let _ = Status.dateFormatter.date(from: timestamp) {
+      self.timestamp = timestamp  
+    } else {
+      self.timestamp = Status.dateFormatter.string(from: Date())
+      Log.warning("Provided timestamp value '\(timestamp)' is not valid; using current time value instead.")
+    }
+ }
 
   /// Returns a dictionary that contains the current status information. This dictionary
   /// contains three key-pair values, where the keys are 'status', 'timestamp', and 'details'.
   public func toDictionary() -> [String : Any] {
     // Transform time in milliseconds to readable format
-    let timestamp = Status.dateFormatter.string(from: Date(timeInMillis: self.tsInMillis))
+    //let timestamp = Status.dateFormatter.string(from: Date(timeInMillis: self.tsInMillis))
     // Add state & details to dictionary
     let dict = ["status" : self.state.rawValue, "details" : details, "timestamp" : timestamp]  as [String : Any]
     return dict
@@ -108,8 +144,7 @@ extension Status: Encodable {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.state.rawValue, forKey: .status)
     try container.encode(self.details, forKey: .details)
-    let timestamp = Status.dateFormatter.string(from: Date(timeInMillis: self.tsInMillis))
-    try container.encode(timestamp, forKey: .timestamp)
+    try container.encode(self.timestamp, forKey: .timestamp)
   }
 }
 
@@ -125,11 +160,11 @@ extension Status: Decodable {
     let details = try values.decode([String].self, forKey: .details)
     let timestamp = try values.decode(String.self, forKey: .timestamp)
     
-    guard let date = Status.dateFormatter.date(from: timestamp) else {
+    guard let _ = Status.dateFormatter.date(from: timestamp) else {
        throw InvalidDataError.deserialization("'\(timestamp)' is not a valid timestamp value.")
     }
 
-    self.init(state: state, details: details, tsInMillis: date.milliseconds)
+    self.init(state: state, details: details, timestamp: timestamp)
   }
 }
 

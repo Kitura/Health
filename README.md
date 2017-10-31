@@ -23,11 +23,8 @@ import PackageDescription
      ...
 
      dependencies: [
-         .Package(url: "https://github.com/IBM-Swift/Health.git", majorVersion: 0),
-
-         ...
-
-     ])
+      .package(url: "https://github.com/IBM-Swift/Health.git", .upToNextMajor(from: "0.0.1"))
+    ],
 ```
 
 And this is how you create a `Health` instance and register your health checks:
@@ -156,5 +153,4 @@ In the code sample above, the health of the application is exposed through the `
 In addition to sending the dictionary response, a server needs to respond with a non-200 status code, if the health state is considered down. This can be accomplished with a status code such as 503 `.serviceUnavailable`. That way, the cloud environment can recognize the negative health response, destroy that instance of the application, and restart the application.
 
 ## Using Cloud Foundry Environment
-
 If using a Cloud Foundry environment, make sure to update your `manifest.yml` to support health check. In the example above, you would set the `health-check-type` value to `http` and the `health-check-http-endpoint` to the correct health endpoint path, which is `/health` in this case. Review the [health check documentation](https://docs.cloudfoundry.org/devguide/deploy-apps/healthchecks.html) for more details.
