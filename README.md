@@ -23,7 +23,7 @@ import PackageDescription
      ...
 
      dependencies: [
-      .package(url: "https://github.com/IBM-Swift/Health.git", .upToNextMajor(from: "0.0.2"))
+      .package(url: "https://github.com/IBM-Swift/Health.git", .upToNextMajor(from: "1.0.0"))
     ],
 ```
 
