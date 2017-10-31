@@ -9,7 +9,7 @@ The Health package provides a basic infrastructure that Swift applications can u
 As an application developer, you create an instance of the `Health` class and then register one or more health checks. A health check can be either a closure that conforms to the `HealthCheckClosure` typealias or a class that conforms to the `HealthCheck` protocol. Once you have your health checks in place, you can ask your `Health` instance for its status.
 
 ## Swift version
-The latest version of Health works with the `3.1.1` version of the Swift binaries. You can download this version of the Swift binaries by following this [link](https://swift.org/download/#snapshots).
+The latest version of Health works with the `4.0` version of the Swift binaries. You can download this version of the Swift binaries by following this [link](https://swift.org/download/#snapshots).
 
 ## Usage
 To leverage the Health package in your Swift application, you should specify a dependency for it in your `Package.swift` file:
@@ -23,11 +23,8 @@ import PackageDescription
      ...
 
      dependencies: [
-         .Package(url: "https://github.com/IBM-Swift/Health.git", majorVersion: 0),
-
-         ...
-
-     ])
+      .package(url: "https://github.com/IBM-Swift/Health.git", .upToNextMajor(from: "0.0.2"))
+    ],
 ```
 
 And this is how you create a `Health` instance and register your health checks:
@@ -73,7 +70,13 @@ The contents of the dictionary contains a key-value pair that lets you know whet
 ["status": "DOWN", "timestamp": "2017-06-12T18:04:38+0000", "details": ["Cloudant health check.", "A health check closure reported status as DOWN."]]
 ```
 
-Swift applications can then use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the `Health` object to get the overall status and then send it back to a client as a JSON payload.
+Swift applications can use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the `Health` object to get the overall status and then send it back to a client as a JSON payload. Also, note that the `Status` structure now conforms to the `Codable` protocol, which will allow serializing an instance of this structure and send it as a response to a client. If doing so, you then don't need to invoke the `toDictionary()` or the `toSimpleDictionary()` methods in order to obtain the status payload for a client:
+
+```
+let status: Status = health.status
+let payload = try JSONEncoder().encode(status)
+// send payload to client
+```
 
 ## Caching
 When you create an instance of the `Health` class, you can pass an optional argument (named `statusExpirationTime`) to its initializer as shown next:
@@ -155,8 +158,26 @@ router.get("/health") { request, response, next in
 
 In the code sample above, the health of the application is exposed through the `/health` endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then use the status information returned from the `/health` endpoint to monitor and manage the Swift application instance. 
 
+As an alternative to the implementation shown above for the `/health` endpoint, you can take advantage of the `Codable` protocol available in Swift 4. Since the `Status` struct satisfities the `Codable` protocol, a simpler implementation for the `/health` endpoint can be implemented using the new codable capabilties in Kitura 2.0 as shown below:
+
+```swift
+...
+
+// Define /health endpoint that leverages Health
+router.get("/health") { request, response, next in
+  let status = health.status
+  if health.status.state == .UP {
+    try response.status(.OK).send(status).end()
+  } else {
+    try response.status(.serviceUnavailable).send(status).end()
+  }
+}
+
+...
+
+```
+
 In addition to sending the dictionary response, a server needs to respond with a non-200 status code, if the health state is considered down. This can be accomplished with a status code such as 503 `.serviceUnavailable`. That way, the cloud environment can recognize the negative health response, destroy that instance of the application, and restart the application.
 
 ## Using Cloud Foundry Environment
-
 If using a Cloud Foundry environment, make sure to update your `manifest.yml` to support health check. In the example above, you would set the `health-check-type` value to `http` and the `health-check-http-endpoint` to the correct health endpoint path, which is `/health` in this case. Review the [health check documentation](https://docs.cloudfoundry.org/devguide/deploy-apps/healthchecks.html) for more details.

@@ -24,7 +24,10 @@ class HealthTests: XCTestCase {
   static var allTests: [(String, (HealthTests) -> () throws -> Void)] {
     return [
       ("testBasicConstruction", testBasicConstruction),
-      ("testAddChecks", testAddChecks)
+      ("testAddChecks", testAddChecks),
+      ("testStatusSerialization", testStatusSerialization),
+      ("testDateExtensions", testDateExtensions),
+      ("testDateFormatter", testDateFormatter)
     ]
   }
 
@@ -151,6 +154,51 @@ class HealthTests: XCTestCase {
     } else {
       XCTFail("Non-expected details in dictionary.")
     }
+  }
+
+  func testDateFormatter() {
+    // Validate conversion from string timestamp to date and back to string timestamp
+    let dateStr1 = "2017-10-31T16:15:56+0000"
+    let dateFormatter = StatusDateFormatter()
+    guard let date1 = dateFormatter.date(from: dateStr1) else {
+       XCTFail("Failed to compute date from valid string timestamp!")
+       return
+    }
+    let computedDateStr1 = dateFormatter.string(from: date1)
+    XCTAssertEqual(dateStr1, computedDateStr1, "Timestamp string values did not match!")
+
+    // Validate conversion to string timestamp from milliseconds
+    let milliseconds: UInt64 = 1509466556000
+    let date2 = Date(timeInMillis: milliseconds)
+    let dateStr2 = dateFormatter.string(from: date2)
+    XCTAssertEqual(dateStr2, "2017-10-31T16:15:56+0000", "Timestamp string values did not match!")
+  }
+
+  func testDateExtensions() {
+    // Compare millis
+    let milliseconds: UInt64 = 1509466556000
+    let date1 = Date(timeIntervalSince1970: TimeInterval(milliseconds / 1000))
+    let date2 = Date(timeInMillis: milliseconds)
+    XCTAssertEqual(date1.timeIntervalSince1970, date2.timeIntervalSince1970, "timeIntervalSince1970 values did not match!")
+    XCTAssertEqual(date1.milliseconds, milliseconds, "milliseconds values did not match!")
+    XCTAssertEqual(date2.milliseconds, milliseconds, "milliseconds values did not match!")
+  }
+
+  func testStatusSerialization() {
+    // Validate serialization and deserialization of status instance
+    let status: Status = Status(state: .DOWN, details: ["details1", "details2", "details3"], timestamp: "2017-10-31T16:15:56+0000")
+    
+    guard let data = try? JSONEncoder().encode(status) else {
+    XCTFail("Failed to encode Status instance!")
+      return
+    }
+
+    guard let decodedStatus = try? JSONDecoder().decode(Status.self, from: data) else {
+       XCTFail("Failed to decode JSON data into a Status instance!")
+       return
+    }
+
+    XCTAssertEqual(status, decodedStatus, "Failed to encode and decode Status instance!")
   }
 
 }

@@ -1,6 +1,6 @@
 # docker-compose up
 app:
-  image: ibmcom/swift-ubuntu:3.1.1
+  image: ibmcom/swift-ubuntu:4.0
   volumes:
-    - .:/root/Health
-  command: bash -c "cd /root/Health && swift package clean && swift build && swift test && swift package clean"
+    - .:/Health
+  command: bash -c "cd /Health && swift package --build-path .build-ubuntu clean && swift build --build-path .build-ubuntu && swift test --build-path .build-ubuntu"
