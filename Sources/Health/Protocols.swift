@@ -40,8 +40,13 @@ case UP
 case DOWN
 }
 
+/// Struct that encapsulates a DateFormatter implementation, specifically used by the Status struct.
 public class StatusDateFormatter {
   private let dateFormatter: DateFormatter
+
+  /// Constructor
+  ///
+  /// Wraps a DateFormatter instance, sets its timezone to UTC and its date format to 'yyyy-MM-dd'T'HH:mm:ssZ'.
   init() {
     self.dateFormatter = DateFormatter()
     self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -53,10 +58,14 @@ public class StatusDateFormatter {
     }
   }
 
+  /// Returns a timestamp string representation from the Date parameter.
+  /// - Parameter from: A Date instance to obtain the date value from.
   public func string(from date: Date) -> String {
     return dateFormatter.string(from: date)
   }
 
+  /// Returns a Date instance that corresponds to the string parameter.
+  /// - Parameter from: A string in the "yyyy-MM-dd'T'HH:mm:ssZ" format.
   public func date(from string: String) -> Date? {
     return dateFormatter.date(from: string)
   }
@@ -139,6 +148,7 @@ public struct Status: Equatable {
   }
 }
 
+/// Extension for the Status struct that conforms to the Encodable protocol.
 extension Status: Encodable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
@@ -148,6 +158,7 @@ extension Status: Encodable {
   }
 }
 
+/// Extension for the Status struct that conforms to the Decodable protocol.
 extension Status: Decodable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)

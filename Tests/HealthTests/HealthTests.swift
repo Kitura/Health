@@ -25,7 +25,9 @@ class HealthTests: XCTestCase {
     return [
       ("testBasicConstruction", testBasicConstruction),
       ("testAddChecks", testAddChecks),
-     // ("testStatusSerialization", testStatusSerialization)
+      ("testStatusSerialization", testStatusSerialization),
+      ("testDateExtensions", testDateExtensions),
+      ("testDateFormatter", testDateFormatter)
     ]
   }
 

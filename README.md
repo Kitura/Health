@@ -68,7 +68,13 @@ The contents of the dictionary contains a key-value pair that lets you know whet
 ["status": "DOWN", "timestamp": "2017-06-12T18:04:38+0000", "details": ["Cloudant health check.", "A health check closure reported status as DOWN."]]
 ```
 
-Swift applications can then use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the `Health` object to get the overall status and then send it back to a client as a JSON payload.
+Swift applications can use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the `Health` object to get the overall status and then send it back to a client as a JSON payload. Also, note that the `Status` structure now supports the `Codable` protocol, which will allow serializing an instance of this structure and send it as a response to a client. If doing so, you then don't need to invoke the `toDictionary()` or the `toSimpleDictionary()` methods in order to obtain the status payload for a client:
+
+```
+let status: Status = health.status
+let payload = try JSONEncoder().encode(status)
+// send payload to client
+```
 
 ## Caching
 When you create an instance of the `Health` class, you can pass an optional argument (named `statusExpirationTime`) to its initializer as shown next:
@@ -149,6 +155,25 @@ router.get("/health") { request, response, next in
 ```
 
 In the code sample above, the health of the application is exposed through the `/health` endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then use the status information returned from the `/health` endpoint to monitor and manage the Swift application instance. 
+
+As an alternative to the implementation shown above for the `/health` endpoint, you can take advantage of the `Codable` protocol available in Swift 4. Since the `Status` struct satisfities the `Codable` protocol, a simpler implementation for the `/health` endpoint can be implemented using the new codable capabilties in Kitura 2.0 as shown below:
+
+```swift
+...
+
+// Define /health endpoint that leverages Health
+router.get("/health") { request, response, next in
+  let status = health.status
+  if health.status.state == .UP {
+    try response.status(.OK).send(status).end()
+  } else {
+    try response.status(.serviceUnavailable).send(status).end()
+  }
+}
+
+...
+
+```
 
 In addition to sending the dictionary response, a server needs to respond with a non-200 status code, if the health state is considered down. This can be accomplished with a status code such as 503 `.serviceUnavailable`. That way, the cloud environment can recognize the negative health response, destroy that instance of the application, and restart the application.
 
