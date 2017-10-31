@@ -23,7 +23,7 @@ import PackageDescription
      ...
 
      dependencies: [
-      .package(url: "https://github.com/IBM-Swift/Health.git", .upToNextMajor(from: "0.0.1"))
+      .package(url: "https://github.com/IBM-Swift/Health.git", .upToNextMajor(from: "0.0.2"))
     ],
 ```
 
@@ -68,7 +68,7 @@ The contents of the dictionary contains a key-value pair that lets you know whet
 ["status": "DOWN", "timestamp": "2017-06-12T18:04:38+0000", "details": ["Cloudant health check.", "A health check closure reported status as DOWN."]]
 ```
 
-Swift applications can use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the `Health` object to get the overall status and then send it back to a client as a JSON payload. Also, note that the `Status` structure now supports the `Codable` protocol, which will allow serializing an instance of this structure and send it as a response to a client. If doing so, you then don't need to invoke the `toDictionary()` or the `toSimpleDictionary()` methods in order to obtain the status payload for a client:
+Swift applications can use either dictionary, depending on the use case, to report the overall status of the application. For instance, an endpoint on the application could be defined that queries the `Health` object to get the overall status and then send it back to a client as a JSON payload. Also, note that the `Status` structure now conforms to the `Codable` protocol, which will allow serializing an instance of this structure and send it as a response to a client. If doing so, you then don't need to invoke the `toDictionary()` or the `toSimpleDictionary()` methods in order to obtain the status payload for a client:
 
 ```
 let status: Status = health.status
