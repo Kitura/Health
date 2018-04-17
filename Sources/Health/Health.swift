@@ -77,7 +77,11 @@ public class Health: HealthProtocol {
   public func forceUpdateStatus() {
     let checksDetails = checks.map { $0.evaluate() == State.DOWN ? $0.description : nil }
     let closureChecksDetails = closureChecks.map { $0() == State.DOWN ? "A health check closure reported status as DOWN." : nil }
-    let details = (checksDetails + closureChecksDetails).flatMap { $0 }
+    #if swift(>=4.1)
+      let details = (checksDetails + closureChecksDetails).compactMap { $0 }
+    #else
+      let details = (checksDetails + closureChecksDetails).flatMap { $0 }
+    #endif
     let state = (details.isEmpty) ? State.UP : State.DOWN
     lastStatus = Status(state: state, details: details)
   }
