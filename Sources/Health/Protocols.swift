@@ -122,7 +122,7 @@ public struct Status: Equatable {
     self.state = state
     self.details = details
     if let _ = Status.dateFormatter.date(from: timestamp) {
-      self.timestamp = timestamp  
+      self.timestamp = timestamp
     } else {
       self.timestamp = Status.dateFormatter.string(from: Date())
       Log.warning("Provided timestamp value '\(timestamp)' is not valid; using current time value instead.")
@@ -162,15 +162,26 @@ extension Status: Encodable {
 extension Status: Decodable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
-    let status = try values.decode(String.self, forKey: .status)
-    
+    var status = try values.decode(String.self, forKey: .status)
+
+    if status == "" {
+      status = "DOWN"
+    }
+
     guard let state = State(rawValue: status) else {
       throw InvalidDataError.deserialization("'\(status)' is not a valid status value.")
     }
-    
+
     let details = try values.decode([String].self, forKey: .details)
-    let timestamp = try values.decode(String.self, forKey: .timestamp)
-    
+    var timestamp = try values.decode(String.self, forKey: .timestamp)
+
+    if timestamp == "" {
+      var dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+      let date = Date()
+      timestamp = dateFormatter.string(from: date)
+    }
+
     guard let _ = Status.dateFormatter.date(from: timestamp) else {
        throw InvalidDataError.deserialization("'\(timestamp)' is not a valid timestamp value.")
     }
