@@ -176,7 +176,7 @@ extension Status: Decodable {
     var timestamp = try values.decode(String.self, forKey: .timestamp)
 
     if timestamp == "" {
-      var dateFormatter = DateFormatter()
+      let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
       let date = Date()
       timestamp = dateFormatter.string(from: date)
