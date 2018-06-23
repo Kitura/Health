@@ -32,8 +32,14 @@ public class Health: HealthProtocol {
   public var status: Status {
     get {
       statusSemaphore.wait()
+      let current = Date.currentTimeMillis()
+      let last = self.lastStatus.tsInMillis
+
       // If elapsed time is bigger than the status expiration window, re-compute status
-      if (Date.currentTimeMillis() - self.lastStatus.tsInMillis) > UInt64(statusExpirationTime) {
+      // Check if current > last to avoid crashs because of negative UInt64 values
+      // This is possible because of different rounding behaviour of DateFormatter.string() and
+      // timeIntervalSince1970 > UInt64 convertion
+      if current > last && (current - last) > UInt64(statusExpirationTime) {
         forceUpdateStatus()
       }
       statusSemaphore.signal()
