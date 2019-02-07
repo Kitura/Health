@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-    <a href="https://www.kitura.io/packages.html#all">
-    <img src="https://img.shields.io/badge/docs-kitura.io-1FBCE4.svg" alt="APIDoc">
+    <a href="https://ibm-swift.github.io/Health/index.html">
+    <img src="https://img.shields.io/badge/apidoc-Health-1FBCE4.svg?style=flat" alt="APIDoc">
     </a>
     <a href="https://travis-ci.org/IBM-Swift/Health">
     <img src="https://travis-ci.org/IBM-Swift/Health.svg?branch=master" alt="Build Status - Master">
@@ -191,6 +191,10 @@ In addition to sending the dictionary response, a server needs to respond with a
 
 ## Using Cloud Foundry Environment
 If using a Cloud Foundry environment, make sure to update your `manifest.yml` to support health check. In the example above, you would set the `health-check-type` value to `http` and the `health-check-http-endpoint` to the correct health endpoint path, which is `/health` in this case. Review the [health check documentation](https://docs.cloudfoundry.org/devguide/deploy-apps/healthchecks.html) for more details.
+
+## API documentation
+
+For more information visit our [API reference](http://ibm-swift.github.io/Health/).
 
 ## Community
 
