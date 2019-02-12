@@ -1,12 +1,6 @@
 {
   "warnings": [
-    {
-      "file": "/Users/olivieri/git/Health/Sources/Health/Protocols.swift",
-      "line": 82,
-      "symbol": "Status.dateFormatter",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    }
+
   ],
-  "source_directory": "/Users/olivieri/git/Health"
+  "source_directory": "/Users/travis/build/IBM-Swift/Health"
 }

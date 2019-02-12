@@ -17,10 +17,32 @@
 import Foundation
 import Dispatch
 
-/// Health class
+/// The `Health` class provides a concrete implementation of the `HealthProtocol` protocol that
+/// applications can instantiate and then register one or more health checks against. Once you
+/// have your health checks in place you can ask your `Health` instance for its status.
 ///
-/// A concrete implementation of the HealthProtocol protocol that applications
-/// can instantiate and leverage right away.
+///### Usage Example: ###
+/// One common use case for this Swift package is to integrate it into a Kitura-based application. In the code sample below, the health of the application is exposed through the /health endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then use the status information returned from the /health endpoint to monitor and manage the Swift application instance.
+///
+/// For further information and example code see our [README](https://github.com/IBM-Swift/Health/blob/master/README.md) and the [Cloud Foundry documentation for using application health checks](https://docs.cloudfoundry.org/devguide/deploy-apps/healthchecks.html).
+///```swift
+/// import Health
+///
+/// let health = Health()
+///
+/// health.addCheck(check: MyCheck1())
+/// health.addCheck(check: myClosureCheck1)
+///
+/// // Define /health endpoint that leverages Health
+/// router.get("/health") { request, response, next in
+///    let status = health.status
+///    if health.status.state == .UP {
+///        try response.status(.OK).send(status).end()
+///    } else {
+///        try response.status(.serviceUnavailable).send(status).end()
+///    }
+/// }
+///```
 public class Health: HealthProtocol {
   private var checks: [HealthCheck]
   private var closureChecks: [HealthCheckClosure]
@@ -48,16 +70,31 @@ public class Health: HealthProtocol {
   }
 
   /// Number of health checks registered.
+  ///
+  ///### Usage Example: ###
+  ///```swift
+  /// let health = Health()
+  ///
+  /// let count = health.numberOfChecks
+  ///```
   public var numberOfChecks: Int {
     get {
       return (checks.count + closureChecks.count)
     }
   }
 
-  /// Constructor
+  /// Creates an instance of the `Health` class.
   ///
-  /// - Parameter statusExpirationTime: Optional. Time window in milliseconds that should
-  /// elapse before the status cache is considered to be expired.
+  ///### Usage Example: ###
+  /// In the example below the `statusExpirationTime` defaults to `30000` milliseconds, in this
+  /// case 30 seconds must elapse before the `Health` instance computes its status again by
+  /// querying each health check that has been registered.
+  ///```swift
+  ///let health = Health()
+  ///```
+  /// - Parameter statusExpirationTime: Optional. The time window in milliseconds that should
+  /// elapse before the status cache for this `Health` instance is considered to be expired
+  /// and should be recomputed. The default value is `30000`.
   public init(statusExpirationTime: Int = 30000) {
     self.statusExpirationTime = statusExpirationTime
     self.lastStatus = Status(state: .UP)
@@ -65,16 +102,30 @@ public class Health: HealthProtocol {
     closureChecks = [HealthCheckClosure]()
   }
 
-  /// Registers a healh check.
+  /// Registers a health check.
   ///
-  /// - Parameter check: An object that extends the HealthCheck class.
+  ///### Usage Example: ###
+  ///```swift
+  /// let health = Health()
+  ///
+  /// // Add custom checks
+  /// health.addCheck(check: MyCheck1())
+  ///```
+  /// - Parameter check: An object that extends the `HealthCheck` class.
   public func addCheck(check: HealthCheck) {
     checks.append(check)
   }
 
-  /// Registers a healh check.
+  /// Registers a health check.
   ///
-  /// - Parameter check: A closure that conforms to the HealthCheckClosure type alias.
+  ///### Usage Example: ###
+  ///```swift
+  /// let health = Health()
+  ///
+  /// // Add custom checks
+  /// health.addCheck(check: myClosureCheck1)
+  ///```
+  /// - Parameter check: A closure that conforms to the `HealthCheckClosure` type alias.
   public func addCheck(check: @escaping HealthCheckClosure) {
     closureChecks.append(check)
   }

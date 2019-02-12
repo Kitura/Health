@@ -40,13 +40,13 @@ case UP
 case DOWN
 }
 
-/// Struct that encapsulates a DateFormatter implementation, specifically used by the Status struct.
+/// Struct that encapsulates a `DateFormatter` implementation, specifically used by the Status struct.
 public class StatusDateFormatter {
   private let dateFormatter: DateFormatter
 
   /// Constructor
   ///
-  /// Wraps a DateFormatter instance, sets its timezone to UTC and its date format to 'yyyy-MM-dd'T'HH:mm:ssZ'.
+  /// Wraps a `DateFormatter` instance, sets its timezone to UTC and its date format to 'yyyy-MM-dd'T'HH:mm:ssZ'.
   init() {
     self.dateFormatter = DateFormatter()
     self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -58,13 +58,13 @@ public class StatusDateFormatter {
     }
   }
 
-  /// Returns a timestamp string representation from the Date parameter.
+  /// Returns a timestamp string representation from the `Date` parameter.
   /// - Parameter from: A Date instance to obtain the date value from.
   public func string(from date: Date) -> String {
     return dateFormatter.string(from: date)
   }
 
-  /// Returns a Date instance that corresponds to the string parameter.
+  /// Returns a `Date` instance that corresponds to the string parameter.
   /// - Parameter from: A string in the "yyyy-MM-dd'T'HH:mm:ssZ" format.
   public func date(from string: String) -> Date? {
     return dateFormatter.date(from: string)
@@ -79,6 +79,7 @@ public class StatusDateFormatter {
 
 /// Struct that encapsulates the status of an application.
 public struct Status: Equatable {
+  /// The date formatter used by the `Status` struct.
   public static let dateFormatter = StatusDateFormatter()
 
   /// The date format used by the timestamp value in the dictionary.
@@ -112,7 +113,7 @@ public struct Status: Equatable {
         return (lhs.state == rhs.state) && (lhs.details == rhs.details) && (lhs.timestamp == rhs.timestamp)
    }
 
-  /// Constructor
+  /// Initializes the `Status` struct, which encapsulates the status of an application.
   ///
   /// - Parameter state: Optional. The state value for this Status instance (default value is 'UP').
   /// - Parameter details: Optional. A list of strings that describes any issues that may have
@@ -148,7 +149,7 @@ public struct Status: Equatable {
   }
 }
 
-/// Extension for the Status struct that conforms to the Encodable protocol.
+/// Extension for the `Status` struct that conforms to the Encodable protocol.
 extension Status: Encodable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
@@ -158,7 +159,7 @@ extension Status: Encodable {
   }
 }
 
-/// Extension for the Status struct that conforms to the Decodable protocol.
+/// Extension for the `Status` struct that conforms to the Decodable protocol.
 extension Status: Decodable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -190,13 +191,11 @@ extension Status: Decodable {
   }
 }
 
-/// HealthCheckClosure is a typealias for a closure that receives no arguments and
+/// HealthCheckClosure is a type alias for a closure that receives no arguments and
 /// returns a State value.
 public typealias HealthCheckClosure = () -> State
 
-/// HealthCheck protocol
-///
-/// Healch check classes should extend this protocol to provide concrete implementations.
+/// Health check classes should extend this protocol to provide concrete implementations.
 public protocol HealthCheck {
   /// Name for the health check.
   var name: String { get }
@@ -206,19 +205,17 @@ public protocol HealthCheck {
   func evaluate() -> State
 }
 
-/// HealthProtocol protocol
-///
-/// Specifies the blueprint that must be implemented to satisfy the needs of a Healch class.
-/// A concrete implemetation of this protocol is already provided by this library (Health).
+/// Specifies the blueprint that must be implemented to satisfy the needs of a `Health` class.
+/// A concrete implementation of this protocol is already provided by this library (Health).
 public protocol HealthProtocol {
   /// Status instance variable.
   var status: Status { get }
-  /// Registers a healh check.
+  /// Registers a health check.
   ///
-  /// - Parameter check: An object that extends the HealthCheck class.
+  /// - Parameter check: An object that extends the `HealthCheck` class.
   func addCheck(check: HealthCheck)
-  /// Registers a healh check.
+  /// Registers a health check.
   ///
-  /// - Parameter check: A closure that conforms to the HealthCheckClosure type alias.
+  /// - Parameter check: A closure that conforms to the `HealthCheckClosure` type alias.
   func addCheck(check: @escaping HealthCheckClosure)
 }
