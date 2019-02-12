@@ -23,7 +23,7 @@
         <a class="header-link" href="../index.html">
           Health Docs
         </a>
-         (97% documented)
+         (100% documented)
       </p>
     
       <p class="header-col--secondary">
@@ -62,7 +62,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/InvalidDataError.html">InvalidDataError</a>
@@ -92,7 +92,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Structs.html">Structs</a>
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Structs/Status.html">Status</a>
@@ -100,7 +100,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Typealiases.html">Typealiases</a>
+            <a class="nav-group-name-link" href="../Typealiases.html">Type Aliases</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a>
@@ -116,14 +116,12 @@
             <h1>HealthProtocol</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">HealthProtocol</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">HealthProtocol</span></code></pre>
 
                 </div>
               </div>
-            <p>HealthProtocol protocol</p>
-
-<p>Specifies the blueprint that must be implemented to satisfy the needs of a Healch class.
-A concrete implemetation of this protocol is already provided by this library (Health).</p>
+            <p>Specifies the blueprint that must be implemented to satisfy the needs of a <code><a href="../Classes/Health.html">Health</a></code> class.
+A concrete implementation of this protocol is already provided by this library (Health).</p>
 
           </div>
         </section>
@@ -135,9 +133,9 @@ A concrete implemetation of this protocol is already provided by this library (H
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Health0A8ProtocolP6statusAA6StatusVv"></a>
+                    <a name="/s:6Health0A8ProtocolP6statusAA6StatusVvp"></a>
                     <a name="//apple_ref/swift/Property/status" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Health0A8ProtocolP6statusAA6StatusVv">status</a>
+                    <a class="token" href="#/s:6Health0A8ProtocolP6statusAA6StatusVvp">status</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -152,7 +150,7 @@ A concrete implemetation of this protocol is already provided by this library (H
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/Status.html">Status</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/Status.html">Status</a></span></code></pre>
 
                         </div>
                       </div>
@@ -172,14 +170,14 @@ A concrete implemetation of this protocol is already provided by this library (H
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Registers a healh check.</p>
+                        <p>Registers a health check.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt"><a href="../Protocols/HealthCheck.html">HealthCheck</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt"><a href="../Protocols/HealthCheck.html">HealthCheck</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -195,7 +193,7 @@ A concrete implemetation of this protocol is already provided by this library (H
                               </td>
                               <td>
                                 <div>
-                                  <p>An object that extends the HealthCheck class.</p>
+                                  <p>An object that extends the <code><a href="../Protocols/HealthCheck.html">HealthCheck</a></code> class.</p>
                                 </div>
                               </td>
                             </tr>
@@ -218,14 +216,14 @@ A concrete implemetation of this protocol is already provided by this library (H
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Registers a healh check.</p>
+                        <p>Registers a health check.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -241,7 +239,7 @@ A concrete implemetation of this protocol is already provided by this library (H
                               </td>
                               <td>
                                 <div>
-                                  <p>A closure that conforms to the HealthCheckClosure type alias.</p>
+                                  <p>A closure that conforms to the <code><a href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a></code> type alias.</p>
                                 </div>
                               </td>
                             </tr>
@@ -259,8 +257,8 @@ A concrete implemetation of this protocol is already provided by this library (H
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2017-10-31)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2019-02-12)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

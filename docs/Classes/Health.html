@@ -23,7 +23,7 @@
         <a class="header-link" href="../index.html">
           Health Docs
         </a>
-         (97% documented)
+         (100% documented)
       </p>
     
       <p class="header-col--secondary">
@@ -62,7 +62,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/InvalidDataError.html">InvalidDataError</a>
@@ -92,7 +92,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Structs.html">Structs</a>
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Structs/Status.html">Status</a>
@@ -100,7 +100,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Typealiases.html">Typealiases</a>
+            <a class="nav-group-name-link" href="../Typealiases.html">Type Aliases</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a>
@@ -116,14 +116,35 @@
             <h1>Health</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Health</span><span class="p">:</span> <span class="kt"><a href="../Protocols/HealthProtocol.html">HealthProtocol</a></span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Health</span><span class="p">:</span> <span class="kt"><a href="../Protocols/HealthProtocol.html">HealthProtocol</a></span></code></pre>
 
                 </div>
               </div>
-            <p>Health class</p>
+            <p>The <code>Health</code> class provides a concrete implementation of the <code><a href="../Protocols/HealthProtocol.html">HealthProtocol</a></code> protocol that
+ applications can instantiate and then register one or more health checks against. Once you
+ have your health checks in place you can ask your <code>Health</code> instance for its status.</p>
+<h3 id='usage-example' class='heading'>Usage Example:</h3>
 
-<p>A concrete implementation of the HealthProtocol protocol that applications
-can instantiate and leverage right away.</p>
+<p>One common use case for this Swift package is to integrate it into a Kitura-based application. In the code sample below, the health of the application is exposed through the /health endpoint. Cloud environments (e.g. Cloud Foundry, Kubernetes, etc.) can then use the status information returned from the /health endpoint to monitor and manage the Swift application instance.</p>
+
+<p>For further information and example code see our <a href="https://github.com/IBM-Swift/Health/blob/master/README.md">README</a> and the <a href="https://docs.cloudfoundry.org/devguide/deploy-apps/healthchecks.html">Cloud Foundry documentation for using application health checks</a>.</p>
+<pre class="highlight swift"><code> <span class="kd">import</span> <span class="kt">Health</span>
+
+ <span class="k">let</span> <span class="nv">health</span> <span class="o">=</span> <span class="kt">Health</span><span class="p">()</span>
+
+ <span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt">MyCheck1</span><span class="p">())</span>
+ <span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="n">myClosureCheck1</span><span class="p">)</span>
+
+ <span class="c1">// Define /health endpoint that leverages Health</span>
+ <span class="n">router</span><span class="o">.</span><span class="nf">get</span><span class="p">(</span><span class="s">"/health"</span><span class="p">)</span> <span class="p">{</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">next</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">status</span> <span class="o">=</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span>
+    <span class="k">if</span> <span class="n">health</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="o">.</span><span class="kt">UP</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="n">response</span><span class="o">.</span><span class="nf">status</span><span class="p">(</span><span class="o">.</span><span class="kt">OK</span><span class="p">)</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="nf">end</span><span class="p">()</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="n">response</span><span class="o">.</span><span class="nf">status</span><span class="p">(</span><span class="o">.</span><span class="n">serviceUnavailable</span><span class="p">)</span><span class="o">.</span><span class="nf">send</span><span class="p">(</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="nf">end</span><span class="p">()</span>
+    <span class="p">}</span>
+ <span class="p">}</span>
+</code></pre>
 
           </div>
         </section>
@@ -135,9 +156,9 @@ can instantiate and leverage right away.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6HealthAAC6statusAA6StatusVv"></a>
+                    <a name="/s:6HealthAAC6statusAA6StatusVvp"></a>
                     <a name="//apple_ref/swift/Property/status" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6HealthAAC6statusAA6StatusVv">status</a>
+                    <a class="token" href="#/s:6HealthAAC6statusAA6StatusVvp">status</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -152,7 +173,7 @@ can instantiate and leverage right away.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/Status.html">Status</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Structs/Status.html">Status</a></span></code></pre>
 
                         </div>
                       </div>
@@ -162,9 +183,9 @@ can instantiate and leverage right away.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6HealthAAC14numberOfChecksSiv"></a>
+                    <a name="/s:6HealthAAC14numberOfChecksSivp"></a>
                     <a name="//apple_ref/swift/Property/numberOfChecks" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6HealthAAC14numberOfChecksSiv">numberOfChecks</a>
+                    <a class="token" href="#/s:6HealthAAC14numberOfChecksSivp">numberOfChecks</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -173,13 +194,18 @@ can instantiate and leverage right away.</p>
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Number of health checks registered.</p>
+<h3 id='usage-example' class='heading'>Usage Example:</h3>
+<pre class="highlight swift"><code> <span class="k">let</span> <span class="nv">health</span> <span class="o">=</span> <span class="kt">Health</span><span class="p">()</span>
+
+ <span class="k">let</span> <span class="nv">count</span> <span class="o">=</span> <span class="n">health</span><span class="o">.</span><span class="n">numberOfChecks</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">numberOfChecks</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">numberOfChecks</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
 
                         </div>
                       </div>
@@ -199,14 +225,21 @@ can instantiate and leverage right away.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Constructor</p>
+                        <p>Creates an instance of the <code>Health</code> class.</p>
+<h3 id='usage-example' class='heading'>Usage Example:</h3>
+
+<p>In the example below the <code>statusExpirationTime</code> defaults to <code>30000</code> milliseconds, in this
+ case 30 seconds must elapse before the <code>Health</code> instance computes its status again by
+ querying each health check that has been registered.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">health</span> <span class="o">=</span> <span class="kt">Health</span><span class="p">()</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">statusExpirationTime</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">statusExpirationTime</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">30000</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -222,8 +255,9 @@ can instantiate and leverage right away.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Optional. Time window in milliseconds that should
-elapse before the status cache is considered to be expired.</p>
+                                  <p>Optional. The time window in milliseconds that should
+elapse before the status cache for this <code>Health</code> instance is considered to be expired
+and should be recomputed. The default value is <code>30000</code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -246,14 +280,20 @@ elapse before the status cache is considered to be expired.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Registers a healh check.</p>
+                        <p>Registers a health check.</p>
+<h3 id='usage-example' class='heading'>Usage Example:</h3>
+<pre class="highlight swift"><code> <span class="k">let</span> <span class="nv">health</span> <span class="o">=</span> <span class="kt">Health</span><span class="p">()</span>
+
+ <span class="c1">// Add custom checks</span>
+ <span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt">MyCheck1</span><span class="p">())</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt"><a href="../Protocols/HealthCheck.html">HealthCheck</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kt"><a href="../Protocols/HealthCheck.html">HealthCheck</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -269,7 +309,7 @@ elapse before the status cache is considered to be expired.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>An object that extends the HealthCheck class.</p>
+                                  <p>An object that extends the <code><a href="../Protocols/HealthCheck.html">HealthCheck</a></code> class.</p>
                                 </div>
                               </td>
                             </tr>
@@ -292,14 +332,20 @@ elapse before the status cache is considered to be expired.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Registers a healh check.</p>
+                        <p>Registers a health check.</p>
+<h3 id='usage-example' class='heading'>Usage Example:</h3>
+<pre class="highlight swift"><code> <span class="k">let</span> <span class="nv">health</span> <span class="o">=</span> <span class="kt">Health</span><span class="p">()</span>
+
+ <span class="c1">// Add custom checks</span>
+ <span class="n">health</span><span class="o">.</span><span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="n">myClosureCheck1</span><span class="p">)</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">addCheck</span><span class="p">(</span><span class="nv">check</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -315,7 +361,7 @@ elapse before the status cache is considered to be expired.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>A closure that conforms to the HealthCheckClosure type alias.</p>
+                                  <p>A closure that conforms to the <code><a href="../Typealiases.html#/s:6Health0A12CheckClosurea">HealthCheckClosure</a></code> type alias.</p>
                                 </div>
                               </td>
                             </tr>
@@ -345,7 +391,7 @@ elapse before the status cache is considered to be expired.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">forceUpdateStatus</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">forceUpdateStatus</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -360,8 +406,8 @@ elapse before the status cache is considered to be expired.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2017-10-31)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2019 <a class="link" href="" target="_blank" rel="external">IBM</a>. All rights reserved. (Last updated: 2019-02-12)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
