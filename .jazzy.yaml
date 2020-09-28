@@ -1,6 +1,6 @@
 module: Health
-author: IBM
-github_url: https://github.com/IBM-Swift/Health/
+author: IBM and the Kitura project authors
+github_url: https://github.com/Kitura/Health/
 
 theme: fullwidth
 clean: true
